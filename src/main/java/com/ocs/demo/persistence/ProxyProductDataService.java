@@ -10,14 +10,7 @@ public class ProxyProductDataService implements ProductDataService {
 
     private static final int SIZE = 10;
 
-    private final DataServiceFactory dataServiceFactory;
-
     private Map<UUID, Product> objectCache = new HashMap<>(SIZE);
-
-    ProxyProductDataService(DataServiceFactory factory) {
-        this.dataServiceFactory = factory;
-        this.prefetch();
-    }
 
     @Override
     public List<Product> getProducts() {
@@ -29,26 +22,15 @@ public class ProxyProductDataService implements ProductDataService {
         return this.objectCache.get(id);
     }
 
-    private void prefetch() {
-        Random random = new Random();
+    @Override
+    public void addProduct(Product product) {
+        this.objectCache.putIfAbsent(product.getId(), product);
+    }
 
-        for (int i = 0; i < SIZE; i++) {
-            UUID productId = UUID.randomUUID();
-            byte[] code = new byte[4];
-            random.nextBytes(code);
-
-            Product product = Product.builder()
-                .id(productId)
-                .code(new String(code))
-                .status((System.currentTimeMillis() % 2) == 0 ? "PUBLISHED" : "DEVELOPMENT")
-                .subscription(Subscription.builder()
-                    .id(UUID.randomUUID())
-                    .productId(productId)
-                    .customerId(UUID.randomUUID())
-                    .validFrom(LocalDateTime.of(2018, random.nextInt(11)+1, random.nextInt(28)+1, 12, 12 ))
-                    .build())
-                .build();
-            this.objectCache.putIfAbsent(product.getId(), product);
-        }
+    @Override
+    public void addSubscription(Subscription subscription) {
+        Product product = this.objectCache.get(subscription.getProductId());
+        product = product.toBuilder().subscription(subscription).build();
+        this.objectCache.replace(product.getId(), product);
     }
 }

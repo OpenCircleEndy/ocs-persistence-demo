@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Set;
 import java.util.UUID;
 
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @ToString
 public class Product {

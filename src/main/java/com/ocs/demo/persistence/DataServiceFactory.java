@@ -9,6 +9,6 @@ public class DataServiceFactory {
     }
 
     public ProductDataService getProductDataService() {
-        return new ProxyProductDataService(this);
+        return new ProxyProductDataService();
     }
 }
