@@ -3,7 +3,6 @@ package com.ocs.demo.persistence;
 import com.ocs.demo.model.Product;
 import com.ocs.demo.model.Subscription;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class ProxyProductDataService implements ProductDataService {
