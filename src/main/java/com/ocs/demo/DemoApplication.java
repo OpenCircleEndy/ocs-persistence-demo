@@ -16,20 +16,20 @@ public class DemoApplication {
 
 		System.out.println("*** Demo Search and Select ***");
 
-		System.out.println("*** Add Product:");
+		System.out.println("\n*** Add Product:");
 		Product product = createProduct("R23JDSK", "PUBLISHED");
 		productDataService.addProduct(product);
 		System.out.println(product);
 
-		System.out.println("*** Add Subscription:");
+		System.out.println("\n*** Add Subscription:");
 		Subscription subscription = createSubscription(product.getId(), LocalDateTime.now());
 		productDataService.addSubscription(subscription);
 		System.out.println(subscription);
 
-		System.out.println("*** Get Products:");
+		System.out.println("\n*** Get Products:");
 		productDataService.getProducts().forEach(System.out::println);
 
-		System.out.println("*** Select Product:");
+		System.out.println("\n*** Select Product:");
 		System.out.print(productDataService.getProductDetails(productDataService.getProducts().get(0).getId()));
 	}
 
