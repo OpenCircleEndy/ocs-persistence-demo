@@ -23,3 +23,8 @@ repositories {
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.16.20'
 }
+
+task runDemo(type: JavaExec) {
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'com.ocs.demo.DemoApplication'
+}
