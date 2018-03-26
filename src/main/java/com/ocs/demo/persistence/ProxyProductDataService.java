@@ -11,6 +11,7 @@ public class ProxyProductDataService implements ProductDataService {
 
     private Map<UUID, Product> objectCache = new HashMap<>(SIZE);
 
+
     @Override
     public List<Product> getProducts() {
         return Collections.unmodifiableList(new ArrayList<>(this.objectCache.values()));

@@ -1,5 +1,7 @@
 package com.ocs.demo.persistence;
 
+import com.ocs.demo.persistence.orm.JooqProductDataService;
+
 public class DataServiceFactory {
 
     private final String[] arguments;
@@ -9,6 +11,6 @@ public class DataServiceFactory {
     }
 
     public ProductDataService getProductDataService() {
-        return new ProxyProductDataService();
+        return new JooqProductDataService();
     }
 }

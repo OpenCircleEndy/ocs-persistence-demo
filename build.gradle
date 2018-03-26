@@ -5,7 +5,17 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
+        classpath 'com.h2database:h2:1.4.197'
 	}
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "5.0.7"
+}
+
+flyway {
+    url = 'jdbc:h2:~/test'
+    user = 'sa'
 }
 
 apply plugin: 'java'
@@ -22,6 +32,7 @@ repositories {
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.16.20'
+    runtimeOnly 'com.h2database:h2:1.4.197'
 }
 
 task runDemo(type: JavaExec) {
