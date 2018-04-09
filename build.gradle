@@ -6,6 +6,7 @@ buildscript {
 	}
 	dependencies {
         classpath 'com.h2database:h2:1.4.197'
+		classpath 'org.jooq:jooq-codegen:3.10.6'
 	}
 }
 
@@ -13,13 +14,14 @@ plugins {
     id "org.flywaydb.flyway" version "5.0.7"
 }
 
+apply plugin: 'java'
+apply plugin: 'idea'
+
 flyway {
     url = 'jdbc:h2:~/test'
     user = 'sa'
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
 
 group = 'com.ocs.demo.persistence'
 version = '0.0.1-SNAPSHOT'
@@ -32,6 +34,7 @@ repositories {
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.16.20'
+	compile 'org.jooq:jooq:3.10.6'
     runtimeOnly 'com.h2database:h2:1.4.197'
 }
 
@@ -39,3 +42,39 @@ task runDemo(type: JavaExec, dependsOn: flywayMigrate) {
 	classpath = sourceSets.main.runtimeClasspath
 	main = 'com.ocs.demo.DemoApplication'
 }
+
+// Use your favourite XML builder to construct the code generation configuration file
+// ----------------------------------------------------------------------------------
+def writer = new StringWriter()
+def xml = new groovy.xml.MarkupBuilder(writer)
+		.configuration('xmlns': 'http://www.jooq.org/xsd/jooq-codegen-3.10.0.xsd') {
+	jdbc() {
+		driver('org.h2.Driver')
+		url('jdbc:h2:~/test')
+		user('sa')
+		password('')
+	}
+	generator() {
+		database() {
+		}
+
+		// Watch out for this caveat when using MarkupBuilder with "reserved names"
+		// - https://github.com/jOOQ/jOOQ/issues/4797
+		// - http://stackoverflow.com/a/11389034/521799
+		// - https://groups.google.com/forum/#!topic/jooq-user/wi4S9rRxk4A
+		generate([:]) {
+			pojos true
+			daos true
+		}
+		target() {
+			packageName('org.jooq.ocs.demo.model')
+			directory('src/main/java')
+		}
+	}
+}
+
+// Run the code generator
+// ----------------------
+org.jooq.util.GenerationTool.generate(
+		javax.xml.bind.JAXB.unmarshal(new StringReader(writer.toString()), org.jooq.util.jaxb.Configuration.class)
+)
