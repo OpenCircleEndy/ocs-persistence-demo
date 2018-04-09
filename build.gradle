@@ -35,7 +35,7 @@ dependencies {
     runtimeOnly 'com.h2database:h2:1.4.197'
 }
 
-task runDemo(type: JavaExec) {
+task runDemo(type: JavaExec, dependsOn: flywayMigrate) {
 	classpath = sourceSets.main.runtimeClasspath
 	main = 'com.ocs.demo.DemoApplication'
 }

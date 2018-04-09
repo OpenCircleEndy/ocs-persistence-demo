@@ -6,6 +6,7 @@ import com.ocs.demo.persistence.ProductDataService;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +20,10 @@ public class JooqProductDataService implements ProductDataService{
         try {
             Connection conn = DriverManager.
                     getConnection("jdbc:h2:~/test", "sa", "");
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM product");
+
+            System.out.println("Products: " + rs.next());
+
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
